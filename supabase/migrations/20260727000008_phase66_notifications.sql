@@ -39,6 +39,8 @@ CREATE POLICY notifications_delete_own ON public.notifications
   FOR DELETE TO authenticated
   USING (user_id = auth.uid());
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.notifications TO authenticated;
+
 -- 3. Server-side notification creation function
 CREATE OR REPLACE FUNCTION public.create_notification(
   p_user_id             uuid,

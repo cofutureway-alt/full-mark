@@ -17,3 +17,5 @@ BEGIN
   RETURN lower(v_id);
 END;
 $$;
+
+GRANT EXECUTE ON FUNCTION public.resolve_login_email(text) TO anon, authenticated;
