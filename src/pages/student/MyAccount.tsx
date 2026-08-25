@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Camera, Loader2, Save, UserCircle2, IdCard, Eye, EyeOff, Trophy, FileText, Globe } from "lucide-react";
+import { Camera, Loader2, Save, UserCircle2, IdCard, Eye, EyeOff, Trophy, FileText, Globe, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +19,7 @@ import {
   PASSWORD_KEYS,
 } from "@/lib/registration-fields";
 import { SocialLinksEditor, type SocialLinkItem } from "@/components/SocialLinksEditor";
+import { getArabicAuthErrorMessage } from "@/lib/auth-errors";
 
 // Fields that should stay read-only on the profile page (identity/security anchors)
 const READ_ONLY_KEYS = new Set(["phone_number", "email"]);
@@ -33,6 +35,15 @@ const MyAccount = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [leaderboardVisible, setLeaderboardVisible] = useState<boolean>(true);
   const [savingVisibility, setSavingVisibility] = useState(false);
+
+  // Change password states
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [updatingPassword, setUpdatingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   const editableFields = useMemo(
@@ -149,6 +160,40 @@ const MyAccount = () => {
     }
     await refreshProfile();
     toast.success("تم حفظ بيانات الحساب");
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError("");
+
+    if (!newPassword) {
+      setPasswordError("يرجى إدخال كلمة المرور الجديدة");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPasswordError("كلمة المرور يجب ألا تقل عن 6 أحرف");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError("كلمتا المرور غير متطابقتين");
+      return;
+    }
+
+    setUpdatingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        toast.error(getArabicAuthErrorMessage(error));
+      } else {
+        toast.success("تم تغيير كلمة المرور بنجاح");
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch (err: any) {
+      toast.error("تعذّر تغيير كلمة المرور");
+    } finally {
+      setUpdatingPassword(false);
+    }
   };
 
   const initials =
@@ -315,6 +360,99 @@ const MyAccount = () => {
             </div>
           </div>
         )}
+      </motion.section>
+
+      {/* Change Password Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.12 }}
+        className="rounded-3xl border border-border/60 bg-card p-6 space-y-5"
+      >
+        <div className="flex items-center gap-2 font-black text-lg">
+          <Lock className="w-5 h-5 text-primary" />
+          <span>تغيير كلمة المرور</span>
+        </div>
+
+        <form onSubmit={handleChangePassword} className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="new-password-input" className="text-sm font-semibold">
+                كلمة المرور الجديدة
+              </Label>
+              <div className="relative">
+                <Input
+                  id="new-password-input"
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    if (passwordError) setPasswordError("");
+                  }}
+                  placeholder="أدخل كلمة المرور الجديدة"
+                  className="pl-10"
+                  dir="ltr"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showNewPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                >
+                  {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password-input" className="text-sm font-semibold">
+                تأكيد كلمة المرور الجديدة
+              </Label>
+              <div className="relative">
+                <Input
+                  id="confirm-password-input"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (passwordError) setPasswordError("");
+                  }}
+                  placeholder="أعد إدخال كلمة المرور"
+                  className="pl-10"
+                  dir="ltr"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showConfirmPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {passwordError && (
+            <p className="text-xs text-destructive font-semibold">{passwordError}</p>
+          )}
+
+          <div className="pt-2 flex justify-end">
+            <Button type="submit" disabled={updatingPassword} className="gap-2 min-w-36">
+              {updatingPassword ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  جارٍ التحديث...
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  تحديث كلمة المرور
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
       </motion.section>
 
       {/* Leaderboard visibility */}
