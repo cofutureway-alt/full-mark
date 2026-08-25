@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Mode — "Clean Laboratory" */
+    --background: 180 33% 97%;
+    --foreground: 200 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 200 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 45% 12%;
+    --primary: 187 85% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 262 60% 96%;
+    --secondary-foreground: 262 45% 28%;
+    --muted: 187 20% 92%;
+    --muted-foreground: 200 15% 42%;
+    --accent: 262 65% 94%;
+    --accent-foreground: 262 45% 28%;
+    --destructive: 0 80% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 187 18% 86%;
+    --input: 187 18% 84%;
+    --ring: 187 85% 32%;
+    --radius: 0.9rem;
+    --gold: 43 90% 50%;
+    --silver: 210 10% 62%;
+    --bronze: 25 60% 46%;
+    /* Chemistry scene helpers (used by Three.js hero + gradients) */
+    --chem-glow-a: 174 90% 42%;   /* phosphor teal   */
+    --chem-glow-b: 262 83% 58%;   /* electric violet */
+    --chem-glow-c: 190 95% 55%;   /* cyan spark      */
+    --sidebar-background: 180 33% 97%;
+    --sidebar-foreground: 200 45% 14%;
+    --sidebar-primary: 187 85% 30%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 187 25% 91%;
+    --sidebar-accent-foreground: 200 45% 14%;
+    --sidebar-border: 187 18% 86%;
+    --sidebar-ring: 187 85% 32%;
+  }
+
+  .dark {
+    /* Dark Mode — "Phosphor Lab" (deep abyssal blue-green, glowing teal/violet) */
+    --background: 205 52% 5%;
+    --foreground: 178 35% 94%;
+    --card: 204 45% 8%;
+    --card-foreground: 178 35% 94%;
+    --popover: 204 45% 8%;
+    --popover-foreground: 178 35% 94%;
+    --primary: 172 80% 45%;
+    --primary-foreground: 203 60% 7%;
+    --secondary: 262 35% 17%;
+    --secondary-foreground: 262 55% 88%;
+    --muted: 204 32% 13%;
+    --muted-foreground: 190 18% 62%;
+    --accent: 262 38% 19%;
+    --accent-foreground: 262 55% 90%;
+    --destructive: 0 68% 42%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 198 30% 15%;
+    --input: 198 30% 16%;
+    --ring: 172 70% 45%;
+    --gold: 43 90% 55%;
+    --silver: 210 12% 66%;
+    --bronze: 25 55% 48%;
+    --chem-glow-a: 170 92% 50%;
+    --chem-glow-b: 264 90% 64%;
+    --chem-glow-c: 188 95% 60%;
+    --sidebar-background: 204 45% 8%;
+    --sidebar-foreground: 178 35% 94%;
+    --sidebar-primary: 172 80% 45%;
+    --sidebar-primary-foreground: 203 60% 7%;
+    --sidebar-accent: 204 32% 14%;
+    --sidebar-accent-foreground: 178 35% 94%;
+    --sidebar-border: 198 30% 15%;
+    --sidebar-ring: 172 70% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-tajawal;
+  }
+
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+    }
+  }
+}
+
+/* --- Lesson video player: block YouTube/Vimeo branding --- */
+/* Match motivia's .plyr-wrapper setup exactly:
+   overflow:hidden is CRITICAL — Plyr scales the YouTube iframe to 300% and offsets it
+   to clip the native YouTube control bar. overflow:hidden makes that scaling also clip
+   the YouTube logo/branding that renders in the iframe corners. */
+.plyr-shell {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.plyr-shell .plyr {
+  width: 100%;
+  height: 100%;
+}
+
+.plyr-shell .plyr--video {
+  height: 100%;
+}
+
+/* iframe always pointer-events:none so YT/Vimeo native UI cannot be interacted with */
+.plyr-shell .plyr__video-embed iframe {
+  pointer-events: none !important;
+}
+
+.plyr-shell .plyr--playing .plyr__video-embed iframe {
+  pointer-events: none !important;
+}
+
+/* Re-enable pointer events only on Plyr's own controls */
+.plyr-shell .plyr__controls {
+  pointer-events: auto;
+}
+
+.plyr-shell .plyr__control--overlaid {
+  pointer-events: auto;
+}
+
+/* --- Chemistry identity helpers (no gradients — solid colors only) ---- */
+
+/* Hero particle drift paths (very low opacity, CSS-only) */
+@keyframes hero-drift-1 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(18px, -26px); }
+  50% { transform: translate(-10px, -44px); }
+  75% { transform: translate(-22px, -18px); }
+}
+@keyframes hero-drift--1 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-20px, 24px); }
+  50% { transform: translate(12px, 42px); }
+  75% { transform: translate(24px, 16px); }
+}
+
+/* Soft phosphor glow for cards/badges on hover */
+.chem-glow {
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.chem-glow:hover {
+  border-color: hsl(var(--chem-glow-a) / 0.45);
+  box-shadow:
+    0 0 0 1px hsl(var(--chem-glow-a) / 0.18),
+    0 8px 40px -12px hsl(var(--chem-glow-a) / 0.35);
+}
