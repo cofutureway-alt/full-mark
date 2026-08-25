@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { IslamicDivider, EightPointStar } from "@/components/IslamicPatterns";
-import { usePlatformSettings } from "@/hooks/use-platform-settings";
+import { usePlatformSettings, getLogoUrl } from "@/hooks/use-platform-settings";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Globe } from "lucide-react";
 

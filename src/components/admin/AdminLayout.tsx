@@ -37,6 +37,8 @@ import {
   Truck,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePlatformSettings, getLogoUrl } from "@/hooks/use-platform-settings";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -266,9 +268,6 @@ const NavGroup = ({
     </div>
   );
 };
-
-import { usePlatformSettings, getLogoUrl } from "@/hooks/use-platform-settings";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const SidebarContent = ({
   onNavigate,
