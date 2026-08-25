@@ -259,19 +259,7 @@ export const AdminDueAlertModal = ({ open, onOpenChange }: AdminDueAlertModalPro
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 bg-muted/40 border-t border-border/60 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              onOpenChange(false);
-              navigate("/admin/renewal-payments");
-            }}
-            className="w-full sm:w-auto text-xs gap-1.5 hover:bg-accent"
-          >
-            <Receipt className="w-3.5 h-3.5" />
-            سجل سداد التجديد والمستحقات
-          </Button>
+        <div className="p-4 bg-muted/40 border-t border-border/60 flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
 
           <Button
             onClick={() => onOpenChange(false)}
