@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { EightPointStar, CrescentStar, IslamicDivider } from "@/components/IslamicPatterns";
 import ThemeToggle from "@/components/ThemeToggle";
 
+import { usePlatformSettings, getLogoUrl } from "@/hooks/use-platform-settings";
+import { useTheme } from "@/contexts/ThemeContext";
+
 interface Props {
   title: string;
   subtitle: string;
@@ -12,6 +15,10 @@ interface Props {
 }
 
 const AuthLayout = ({ title, subtitle, children, footer }: Props) => {
+  const { settings } = usePlatformSettings();
+  const { theme } = useTheme();
+  const logoUrl = getLogoUrl(settings, theme);
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-background flex items-center justify-center p-4">
       <div className="absolute top-4 left-4 z-20">
@@ -47,7 +54,7 @@ const AuthLayout = ({ title, subtitle, children, footer }: Props) => {
             className="flex justify-center mb-6"
           >
             <Link to="/">
-              <img src="/logo.png" alt="منصة مستر محمد إبراهيم" className="h-16 w-16 rounded-xl object-contain" />
+              <img src={logoUrl} alt="منصة مستر محمد إبراهيم" className="h-16 w-16 rounded-xl object-contain" />
             </Link>
           </motion.div>
 

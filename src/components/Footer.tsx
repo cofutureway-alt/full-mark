@@ -70,10 +70,7 @@ const Footer = () => {
   const { settings } = usePlatformSettings();
   const { theme } = useTheme();
 
-  const logoUrl =
-    theme === "dark" && settings.logo_dark_url
-      ? settings.logo_dark_url
-      : settings.logo_light_url || "/logo.png";
+  const logoUrl = getLogoUrl(settings, theme);
 
   // Use DB social links if any, otherwise fall back to hardcoded defaults so the
   // footer is never empty before the admin first configures things.

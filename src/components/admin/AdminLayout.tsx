@@ -268,6 +268,9 @@ const NavGroup = ({
   );
 };
 
+import { usePlatformSettings, getLogoUrl } from "@/hooks/use-platform-settings";
+import { useTheme } from "@/contexts/ThemeContext";
+
 const SidebarContent = ({
   onNavigate,
   collapsed,
@@ -276,6 +279,10 @@ const SidebarContent = ({
   collapsed?: boolean;
 }) => {
   const { pathname } = useLocation();
+  const { settings } = usePlatformSettings();
+  const { theme } = useTheme();
+  const logoUrl = getLogoUrl(settings, theme);
+
   const defaultOpen = useMemo(() => {
     const g = nav.find(
       (e) =>
@@ -293,7 +300,7 @@ const SidebarContent = ({
     <div className="flex h-full flex-col">
       <div className={`${collapsed ? "px-3" : "px-6"} py-6 border-b border-border/60`}>
         <NavLink to="/" className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} group`}>
-          <img src="/logo.png" alt="شعار منصة مستر محمد إبراهيم" className="h-11 w-11 rounded-lg object-contain" />
+          <img src={logoUrl} alt="شعار منصة مستر محمد إبراهيم" className="h-11 w-11 rounded-lg object-contain" />
           {!collapsed && (
             <div>
               <div className="font-bold text-foreground leading-tight">لوحة الإدارة</div>

@@ -19,7 +19,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import WalletWidget from "@/components/WalletWidget";
 import CartWidget from "@/components/CartWidget";
 import NotificationBell from "@/components/notifications/NotificationBell";
-import { usePlatformSettings } from "@/hooks/use-platform-settings";
+import { usePlatformSettings, getLogoUrl } from "@/hooks/use-platform-settings";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -29,10 +29,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const logoUrl =
-    theme === "dark" && settings.logo_dark_url
-      ? settings.logo_dark_url
-      : settings.logo_light_url || "/logo.png";
+  const logoUrl = getLogoUrl(settings, theme);
 
 
   const links = [

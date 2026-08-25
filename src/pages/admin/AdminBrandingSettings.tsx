@@ -326,6 +326,11 @@ const AdminBrandingSettings = () => {
               logo_light_url: next.logo_light_url || null,
               logo_dark_url: next.logo_dark_url || null,
               social_links: next.social_links,
+              hero_image_url: next.hero_image_url || null,
+              hero_headline: next.hero_headline || null,
+              hero_subtext: next.hero_subtext || null,
+              hero_cta_label: next.hero_cta_label || null,
+              hero_cta_url: next.hero_cta_url || null,
             })
             .eq("id", 1);
           if (error) throw error;
