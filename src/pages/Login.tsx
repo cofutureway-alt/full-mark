@@ -54,16 +54,28 @@ const Login = () => {
     let authEmail: string;
     if (identifierMode === "phone") {
       const canonical = normalizeEgPhone(idTrim);
-      // Ask the server which auth email is associated with this phone
-      const { data: resolved, error: resolveErr } = await (supabase as any).rpc(
+      // The canonical auth email for phone accounts is the deterministic
+      // synthetic address (same one used at signup). The legacy
+      // resolve_login_email RPC returns a different domain
+      // (@internal.noemail.local) than the one accounts are actually
+      // registered with (@phone.noemail.invalid), which breaks login —
+      // so we normalize its result back to the canonical domain.
+      const { data: resolved } = await (supabase as any).rpc(
         "resolve_login_email",
         { _identifier: canonical },
       );
-      if (resolveErr) {
-        // Fallback: synthetic email if user has no real email set
-        authEmail = syntheticAuthEmail(canonical);
+      const resolvedEmail = typeof resolved === "string" ? resolved : "";
+      if (resolvedEmail.endsWith("@phone.noemail.invalid")) {
+        authEmail = resolvedEmail;
+      } else if (
+        resolvedEmail &&
+        !resolvedEmail.endsWith("@internal.noemail.local") &&
+        !resolvedEmail.endsWith(".invalid")
+      ) {
+        // A real email on file for this phone
+        authEmail = resolvedEmail;
       } else {
-        authEmail = (resolved as string) || syntheticAuthEmail(canonical);
+        authEmail = syntheticAuthEmail(canonical);
       }
     } else {
       authEmail = idTrim.toLowerCase();
