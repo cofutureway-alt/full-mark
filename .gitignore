@@ -29,3 +29,4 @@ supabase/.temp
 .env.local
 .claude/
 scripts/apply-login-fix.mjs
+scripts/fix-triggers.mjs
