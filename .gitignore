@@ -30,3 +30,6 @@ supabase/.temp
 .claude/
 scripts/apply-login-fix.mjs
 scripts/fix-triggers.mjs
+scripts/check-book-price.mjs
+scripts/fix-book-price.mjs
+scripts/fix-resolve-login-email.sql
