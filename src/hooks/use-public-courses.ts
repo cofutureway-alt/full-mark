@@ -41,7 +41,7 @@ export function usePublicCourses(limit?: number, opts?: { featuredOnly?: boolean
       let q = (supabase as any)
         .from("courses")
         .select(
-          "id, title, description, thumbnail_url, stage_id, subject_id, created_at, is_paid, price_piastres, discount_price_piastres, discount_expires_at, status, scheduled_publish_at, is_featured, featured_at, stages(name), subjects(name), units(id)",
+          "id, title, description, thumbnail_url, stage_id, subject_id, created_at, is_paid, price_piastres, discount_price_piastres, discount_expires_at, status, scheduled_publish_at, is_featured, featured_at, stages!courses_stage_id_fkey(name), subjects(name), units(id)",
         )
         .in("status", ["published", "coming_soon"]);
       if (featuredOnly) {

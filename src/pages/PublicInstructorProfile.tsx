@@ -106,7 +106,7 @@ export default function PublicInstructorProfile() {
       // Fetch published courses created by this instructor
       (supabase as any)
         .from("courses")
-        .select("id, title, description, thumbnail_url, status, is_featured, is_paid, price_piastres, discount_price_piastres, discount_expires_at, scheduled_publish_at, stage_id, subject_id, created_at, stages(name), subjects(name), units(id)")
+        .select("id, title, description, thumbnail_url, status, is_featured, is_paid, price_piastres, discount_price_piastres, discount_expires_at, scheduled_publish_at, stage_id, subject_id, created_at, stages!courses_stage_id_fkey(name), subjects(name), units(id)")
         .eq("created_by", userId)
         .eq("status", "published")
         .order("created_at", { ascending: false }),

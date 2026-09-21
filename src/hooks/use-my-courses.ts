@@ -30,7 +30,7 @@ export function useMyCourses() {
       const { data: enrollments } = await supabase
         .from("enrollments")
         .select(
-          "enrolled_at, course_id, courses(id, title, description, thumbnail_url, stages(name))",
+          "enrolled_at, course_id, courses(id, title, description, thumbnail_url, stages!courses_stage_id_fkey(name))",
         )
         .eq("user_id", user.id)
         .order("enrolled_at", { ascending: false });

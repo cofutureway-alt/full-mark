@@ -114,7 +114,7 @@ const CourseDetails = () => {
     // Fetch course (RLS: published visible to all, admin sees all)
     const { data: cData, error: cErr } = await (supabase as any)
       .from("courses")
-      .select("id, title, description, thumbnail_url, stage_id, status, is_paid, price_piastres, discount_price_piastres, discount_expires_at, scheduled_publish_at, created_by, stages(name), subjects(name)")
+      .select("id, title, description, thumbnail_url, stage_id, status, is_paid, price_piastres, discount_price_piastres, discount_expires_at, scheduled_publish_at, created_by, stages!courses_stage_id_fkey(name), subjects(name)")
       .eq("id", id)
       .maybeSingle();
 

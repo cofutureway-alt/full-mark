@@ -106,7 +106,7 @@ export function useStudentStats() {
       const { data: enrollments } = await supabase
         .from("enrollments")
         .select(
-          "enrolled_at, course_id, courses(id, title, thumbnail_url, stages(name), subjects(name))",
+          "enrolled_at, course_id, courses(id, title, thumbnail_url, stages!courses_stage_id_fkey(name), subjects(name))",
         )
         .eq("user_id", uid)
         .order("enrolled_at", { ascending: false });
@@ -543,7 +543,7 @@ export function useAdminStats() {
         (supabase as any).from("quiz_questions").select("id", { count: "exact", head: true }),
         (supabase as any).from("assignments").select("id", { count: "exact", head: true }),
         supabase.from("enrollments").select("course_id"),
-        supabase.from("courses").select("id, title, thumbnail_url, created_at, stages(name)"),
+        supabase.from("courses").select("id, title, thumbnail_url, created_at, stages!courses_stage_id_fkey(name)"),
         (supabase as any).rpc("get_most_failed_quizzes", { _limit: 10 }),
         (supabase as any).rpc("get_most_failed_assignments", { _limit: 10 }),
         (supabase as any).rpc("get_assignment_platform_metrics"),
